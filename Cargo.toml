@@ -1,0 +1,5 @@
+[package]
+name = "rustwebact"
+version = "0.0.1"
+authors = ["Andrew <andrew@subarctic.org>"]
+edition = "2020"
