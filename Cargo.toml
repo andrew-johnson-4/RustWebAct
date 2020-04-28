@@ -1,5 +1,7 @@
 [package]
 name = "rustwebact"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Andrew <andrew@subarctic.org>"]
-edition = "2020"
+edition = "2018"
+readme = "README.md"
+repository = "https://github.com/andrew-johnson-4/RustWebAct"

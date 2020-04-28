@@ -1,9 +1,9 @@
 # You must change these to your own details.
 [package]
-name = "rust-webpack-template"
-description = "My super awesome Rust, WebAssembly, and Webpack project!"
-version = "0.1.0"
-authors = ["You <you@example.com>"]
+name = "ntp"
+description = "Network Time Protocol Simulator"
+version = "0.1.1"
+authors = ["Andrew Johnson <andrew@subarctic.org>"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
