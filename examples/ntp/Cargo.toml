@@ -2,7 +2,7 @@
 [package]
 name = "ntp"
 description = "Network Time Protocol Simulator"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Andrew Johnson <andrew@subarctic.org>"]
 categories = ["wasm"]
 readme = "README.md"
