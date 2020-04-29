@@ -1,27 +1,24 @@
 use wasm_bindgen::prelude::*;
-use web_sys::console;
+use std::sync::Mutex;
+use serde_json::{Value};
 
-
-// When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
-// allocator.
-//
-// If you don't want to use `wee_alloc`, you can safely delete this.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-
-// This is like the `main` function, except for JavaScript.
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
-    // This provides better error messages in debug mode.
-    // It's disabled in release mode so it doesn't bloat up the file size.
-    #[cfg(debug_assertions)]
-    console_error_panic_hook::set_once();
+    let start_time = 9*3600 + 10*60 + 11;
 
-
-    // Your code goes here!
-    console::log_1(&JsValue::from_str("Hello world!"));
+    let mut fast_timer: Mutex<u64> = Mutex::new(start_time);
+    HtmlActor::new("#fast_timer", "{:02}:{:02}:{:02}", vec![
+       ("ntp", "tick", move |msg| {
+          let mut timer = fast_timer.lock().unwrap();
+          *timer += 1;
+       }),
+       ("ntp", "set", move |msg| {
+          if let Value::Number(time) = msg {
+             let mut timer = fast_timer.lock().unwrap();
+             *timer = time.as_u64().expect("ntp expected u64 time value");
+          }
+       }),
+    ]);
 
     Ok(())
 }
