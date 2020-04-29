@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+use rustwebact::rwa_time::{set_interval_forget};
 use std::sync::Mutex;
 use serde_json::{Value};
 
@@ -8,6 +9,18 @@ fn parse_time(t: u64) -> (u64,u64,u64) {
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
+    let mut i = 0;
+    set_interval_forget(move || {
+       i += 1;
+       let window = web_sys::window().expect("should have a window in this context");
+       let document = window.document().expect("window should have a document");
+       document
+           .get_element_by_id("body")
+           .expect("should have #body on the page")
+           .set_inner_html(&format!("main_js call #{}",i));
+    }, 1000);
+
+    /*
     let start_time = 9*3600 + 10*60 + 11;
 
     let mut fast_timer: Mutex<u64> = Mutex::new(start_time);
@@ -28,7 +41,7 @@ pub fn main_js() -> Result<(), JsValue> {
           };
           true
        })],
-    ]);
+    );
 
     setIntervalForget(|| { jsmx_exchange.push("fast_timer","tick",Value::Null) }, 900);
     setIntervalForget(|| { jsmx_exchange.push("mid_timer","tick",Value::Null) }, 1000);
@@ -39,6 +52,7 @@ pub fn main_js() -> Result<(), JsValue> {
        ntp_timer += 60;
        jsmx_exchange.push("ntp","set",Value::Number(ntp_timer));
     }, 60000);
+    */
 
     Ok(())
 }
