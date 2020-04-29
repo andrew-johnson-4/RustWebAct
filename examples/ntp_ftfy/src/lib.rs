@@ -8,7 +8,7 @@ pub fn main_js() -> Result<(), JsValue> {
 
     let mut fast_timer: Mutex<u64> = Mutex::new(start_time);
     HtmlActor::new("#fast_timer", "{:02}:{:02}:{:02}", vec![
-       ("ntp", "tick", move |msg| {
+       ("fast_timer", "tick", move |msg| {
           let mut timer = fast_timer.lock().unwrap();
           *timer += 1;
        }),
@@ -19,6 +19,16 @@ pub fn main_js() -> Result<(), JsValue> {
           }
        }),
     ]);
+
+    setIntervalForget(|| { jsmx_exchange.push("fast_timer","tick",Value::Null) }, 900);
+    setIntervalForget(|| { jsmx_exchange.push("mid_timer","tick",Value::Null) }, 1000);
+    setIntervalForget(|| { jsmx_exchange.push("slow_timer","tick",Value::Null) }, 1100);
+
+    let mut ntp_timer = start_time;
+    setIntervalForget(move || {
+       ntp_timer += 60;
+       jsmx_exchange.push("ntp","set",Value::Number(ntp_timer));
+    }, 60000);
 
     Ok(())
 }
