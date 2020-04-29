@@ -9,21 +9,10 @@ fn parse_time(t: u64) -> (u64,u64,u64) {
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
-    let mut i = 0;
-    set_interval_forget(move || {
-       i += 1;
-       let window = web_sys::window().expect("should have a window in this context");
-       let document = window.document().expect("window should have a document");
-       document
-           .get_element_by_id("body")
-           .expect("should have #body on the page")
-           .set_inner_html(&format!("main_js call #{}",i));
-    }, 1000);
-
-    /*
     let start_time = 9*3600 + 10*60 + 11;
 
     let mut fast_timer: Mutex<u64> = Mutex::new(start_time);
+    /*
     HtmlActor::new("#fast_timer", || {
           let mut timer = fast_timer.lock().unwrap();
           let (h,m,s) = parse_time(*timer);
@@ -42,17 +31,17 @@ pub fn main_js() -> Result<(), JsValue> {
           true
        })],
     );
+    */
 
-    setIntervalForget(|| { jsmx_exchange.push("fast_timer","tick",Value::Null) }, 900);
-    setIntervalForget(|| { jsmx_exchange.push("mid_timer","tick",Value::Null) }, 1000);
-    setIntervalForget(|| { jsmx_exchange.push("slow_timer","tick",Value::Null) }, 1100);
+    set_interval_forget(|| { jsmx_exchange.push("fast_timer","tick",Value::Null) }, 900);
+    set_interval_forget(|| { jsmx_exchange.push("mid_timer","tick",Value::Null) }, 1000);
+    set_interval_forget(|| { jsmx_exchange.push("slow_timer","tick",Value::Null) }, 1100);
 
     let mut ntp_timer = start_time;
-    setIntervalForget(move || {
+    set_interval_forget(move || {
        ntp_timer += 60;
-       jsmx_exchange.push("ntp","set",Value::Number(ntp_timer));
+       jsmx_exchange.push("ntp","set",Value::Number::from(ntp_timer));
     }, 60000);
-    */
 
     Ok(())
 }
