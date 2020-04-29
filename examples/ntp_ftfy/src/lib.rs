@@ -11,7 +11,7 @@ pub fn main_js() -> Result<(), JsValue> {
     let start_time = 9*3600 + 10*60 + 11;
 
     let mut fast_timer: Mutex<u64> = Mutex::new(start_time);
-    HtmlActor::new("#fast_timer", |actor| {
+    HtmlActor::new("#fast_timer", || {
           let mut timer = fast_timer.lock().unwrap();
           let (h,m,s) = parse_time(*timer);
           format!("{:02}:{:02}:{:02}", h, m, s)
