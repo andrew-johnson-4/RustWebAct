@@ -1,5 +1,12 @@
 use wasm_bindgen::prelude::*;
 
+/*
+   !! hide unstable interfaces behind stable interfaces
+
+   here within lies the javascript setInterval and related interfaces
+   the related wasm_bindgen interface is roughly hewn so we will provide a shim
+*/
+
 #[wasm_bindgen]
 extern "C" {
     fn setInterval(closure: &Closure<dyn FnMut()>, time: u32) -> i32;
