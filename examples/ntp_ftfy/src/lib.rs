@@ -101,17 +101,16 @@ pub fn main_js() -> Result<(), JsValue> {
     });
 
     /*
-    HtmlActor::new("#fast_timer", move || {
-          let mut timer = fast_timer.lock().unwrap();
-          let (h,m,s) = parse_time(*timer);
+    HtmlActor::new("#fast_timer", start_time, |&mut time| {
+          let (h,m,s) = parse_time(time);
           format!("{:02}:{:02}:{:02}", h, m, s)
        }, vec![
-       ("fast_timer", "tick", move |msg| {
+       ("fast_timer", "tick", move |&mut time, msg| {
           let mut timer = fast_timer.lock().unwrap();
           *timer += 1;
           true
        }),
-       ("ntp", "set", move |msg| {
+       ("ntp", "set", move |&mut time, msg| {
           if let Value::Number(time) = msg {
              let mut timer = fast_timer.lock().unwrap();
              *timer = time.as_u64().expect("ntp expected u64 time value");
