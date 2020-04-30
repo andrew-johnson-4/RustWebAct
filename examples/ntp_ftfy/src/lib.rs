@@ -1,7 +1,8 @@
 use wasm_bindgen::prelude::*;
+use jsmx::{JSMX_EXCHANGE};
 use rustwebact::rwa_time::{set_interval_forget};
 use std::sync::Mutex;
-use serde_json::{Value};
+use serde_json::{Value, Number};
 
 fn parse_time(t: u64) -> (u64,u64,u64) {
     (t/3600, (t/60)%60, t%60)
@@ -33,14 +34,14 @@ pub fn main_js() -> Result<(), JsValue> {
     );
     */
 
-    set_interval_forget(|| { jsmx_exchange.push("fast_timer","tick",Value::Null) }, 900);
-    set_interval_forget(|| { jsmx_exchange.push("mid_timer","tick",Value::Null) }, 1000);
-    set_interval_forget(|| { jsmx_exchange.push("slow_timer","tick",Value::Null) }, 1100);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("fast_timer","tick",&Value::Null) }, 900);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("mid_timer","tick",&Value::Null) }, 1000);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("slow_timer","tick",&Value::Null) }, 1100);
 
     let mut ntp_timer = start_time;
     set_interval_forget(move || {
        ntp_timer += 60;
-       jsmx_exchange.push("ntp","set",Value::Number::from(ntp_timer));
+       JSMX_EXCHANGE.push("ntp","set",&Value::Number(Number::from(ntp_timer)));
     }, 60000);
 
     Ok(())
