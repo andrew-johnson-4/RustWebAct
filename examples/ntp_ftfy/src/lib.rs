@@ -106,14 +106,12 @@ pub fn main_js() -> Result<(), JsValue> {
           format!("{:02}:{:02}:{:02}", h, m, s)
        }, vec![
        ("fast_timer", "tick", move |&mut time, msg| {
-          let mut timer = fast_timer.lock().unwrap();
-          *timer += 1;
+          time += 1;
           true
        }),
        ("ntp", "set", move |&mut time, msg| {
-          if let Value::Number(time) = msg {
-             let mut timer = fast_timer.lock().unwrap();
-             *timer = time.as_u64().expect("ntp expected u64 time value");
+          if let Value::Number(n) = msg {
+             time = n.as_u64().unwrap();
           };
           true
        })],
