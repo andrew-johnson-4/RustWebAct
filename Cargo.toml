@@ -1,6 +1,6 @@
 [package]
 name = "rustwebact"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Andrew <andrew@subarctic.org>"]
 license = "MIT"
 description = "Reactive Actor Web Apps for Rust on the Web"
@@ -10,3 +10,4 @@ repository = "https://github.com/andrew-johnson-4/RustWebAct"
 
 [dependencies]
 wasm-bindgen = "0.2.45"
+jsmx = "0.3.1"
