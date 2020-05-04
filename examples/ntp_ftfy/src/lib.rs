@@ -14,34 +14,21 @@ fn parse_time(t: u64) -> (u64,u64,u64) {
 pub fn main_js() -> Result<(), JsValue> {
     let start_time = 9*3600 + 10*60 + 11;
 
-    let fast_seconds: Arc<Mutex<u64>> = Arc::new(Mutex::new(start_time));
-    let timer = fast_seconds.clone();
-    JSMX_EXCHANGE.listen("fast_timer", "tick", move |_msg| {
-       let mut fast_seconds = timer.lock().unwrap();
-       *fast_seconds += 1;
-       let (h,m,s) = parse_time(*fast_seconds);
-       let window = web_sys::window().expect("should have a window in this context");
-       let document = window.document().expect("window should have a document");
-       document
-           .get_element_by_id("fast_timer")
-           .expect("should have #fast_timer on the page")
-           .set_inner_html(&format!("{:02}:{:02}:{:02}", h, m, s));
-    });
-    let timer = fast_seconds.clone();
-    JSMX_EXCHANGE.listen("ntp", "set", move |msg| {
-       if let Value::Number(n) = msg {
-          let n = n.as_u64().unwrap();
-          let mut fast_seconds = timer.lock().unwrap();
-          *fast_seconds = n;
-          let (h,m,s) = parse_time(n);
-          let window = web_sys::window().expect("should have a window in this context");
-          let document = window.document().expect("window should have a document");
-          document
-             .get_element_by_id("fast_timer")
-             .expect("should have #fast_timer on the page")
-             .set_inner_html(&format!("{:02}:{:02}:{:02}", h, m, s));
-       }
-    });
+    HtmlActor::new("fast_timer", start_time, |time| {
+          let (h,m,s) = parse_time(*time);
+          format!("{:02}:{:02}:{:02}", h, m, s)
+       }, vec![
+       ("fast_timer", "tick", Box::new(|time, msg| {
+          *time += 1;
+          true
+       })),
+       ("ntp", "set", Box::new(|&mut time, msg| {
+          /* if let Value::Number(n) = msg {
+             time = n.as_u64().unwrap();
+          }; */
+          true
+       }))],
+    );
 
     let mid_seconds: Arc<Mutex<u64>> = Arc::new(Mutex::new(start_time));
     let timer = mid_seconds.clone();
@@ -100,22 +87,6 @@ pub fn main_js() -> Result<(), JsValue> {
              .set_inner_html(&format!("{:02}:{:02}:{:02}", h, m, s));
        }
     });
-
-    HtmlActor::new("#fast_timer", start_time, |&mut time| {
-          let (h,m,s) = parse_time(time);
-          format!("{:02}:{:02}:{:02}", h, m, s)
-       }, vec![
-       ("fast_timer", "tick", Box::new(|&mut time, msg| {
-          //time += 1;
-          true
-       })),
-       ("ntp", "set", Box::new(|&mut time, msg| {
-          /* if let Value::Number(n) = msg {
-             time = n.as_u64().unwrap();
-          }; */
-          true
-       }))],
-    );
 
     set_interval_forget(|| { JSMX_EXCHANGE.push("fast_timer","tick",&Value::Null) }, 900);
     set_interval_forget(|| { JSMX_EXCHANGE.push("mid_timer","tick",&Value::Null) }, 1000);
