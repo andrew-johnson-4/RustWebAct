@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use jsmx::{JSMX_EXCHANGE};
 use rustwebact::rwa_time::{set_interval_forget};
+use rustwebact::rwa_html::{HtmlActor};
 use std::sync::Mutex;
 use std::sync::Arc;
 use serde_json::{Value, Number};
@@ -100,23 +101,21 @@ pub fn main_js() -> Result<(), JsValue> {
        }
     });
 
-    /*
     HtmlActor::new("#fast_timer", start_time, |&mut time| {
           let (h,m,s) = parse_time(time);
           format!("{:02}:{:02}:{:02}", h, m, s)
        }, vec![
-       ("fast_timer", "tick", move |&mut time, msg| {
-          time += 1;
+       ("fast_timer", "tick", Box::new(|&mut time, msg| {
+          //time += 1;
           true
-       }),
-       ("ntp", "set", move |&mut time, msg| {
-          if let Value::Number(n) = msg {
+       })),
+       ("ntp", "set", Box::new(|&mut time, msg| {
+          /* if let Value::Number(n) = msg {
              time = n.as_u64().unwrap();
-          };
+          }; */
           true
-       })],
+       }))],
     );
-    */
 
     set_interval_forget(|| { JSMX_EXCHANGE.push("fast_timer","tick",&Value::Null) }, 900);
     set_interval_forget(|| { JSMX_EXCHANGE.push("mid_timer","tick",&Value::Null) }, 1000);
