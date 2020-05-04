@@ -2,7 +2,6 @@ use serde_json::{Value};
 use std::sync::{Arc,Mutex};
 use std::borrow::{Borrow,BorrowMut};
 use jsmx::{JSMX_EXCHANGE};
-use wasm_bindgen::prelude::*;
 
 pub struct HtmlActor<T> {
    st: Arc<Mutex<T>>
