@@ -1,27 +1,51 @@
 use wasm_bindgen::prelude::*;
-use web_sys::console;
+use jsmx::{JSMX_EXCHANGE};
+use serde_json::{Value};
+use rustwebact::rwa_html::{HtmlActor};
 
-
-// When the `wee_alloc` feature is enabled, this uses `wee_alloc` as the global
-// allocator.
-//
-// If you don't want to use `wee_alloc`, you can safely delete this.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-
-// This is like the `main` function, except for JavaScript.
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
-    // This provides better error messages in debug mode.
-    // It's disabled in release mode so it doesn't bloat up the file size.
-    #[cfg(debug_assertions)]
-    console_error_panic_hook::set_once();
 
+    HtmlActor::new("topleft", (), |character_profile| {
+          "<div style='position: absolute; top: 0; left: 0; width: 300px; height: 100px; background-color: #FF0000;'>
+Character Profile</div>".to_string()
+       }, vec![
+          ("document", "ready", Box::new(|time, msg| { true })
+       )],
+    );
 
-    // Your code goes here!
-    console::log_1(&JsValue::from_str("Hello world!"));
+    HtmlActor::new("topright", (), |minimap| {
+          "<div style='position: absolute; top: 0; right: 0; width: 200px; height: 200px; background-color: #00FF00;'>
+Map Overlay</div>".to_string()
+       }, vec![
+          ("document", "ready", Box::new(|time, msg| { true })
+       )],
+    );
 
+    HtmlActor::new("bottomleft", (), |notifications| {
+          "<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #0000FF;'>
+Notifications</div>".to_string()
+       }, vec![
+          ("document", "ready", Box::new(|time, msg| { true })
+       )],
+    );
+
+    HtmlActor::new("bottomright", (), |help| {
+          "<div style='position: absolute; bottom: 40px; right: 0; width: 300px; height: 400px; background-color: #FFFF00;'>
+Help Text</div>".to_string()
+       }, vec![
+          ("document", "ready", Box::new(|time, msg| { true })
+       )],
+    );
+
+    HtmlActor::new("bottombottom", (), |notifications| {
+          "<div style='position: absolute; bottom: 0; left: 0; width: 100%; height: 40px; background-color: #444444;'>
+Action Bar</div>".to_string()
+       }, vec![
+          ("document", "ready", Box::new(|time, msg| { true })
+       )],
+    );
+
+    JSMX_EXCHANGE.push("document","ready",&Value::Null);
     Ok(())
 }
