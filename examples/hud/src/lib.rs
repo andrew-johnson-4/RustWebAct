@@ -10,14 +10,14 @@ mod hud_html; use hud_html::{resource_bar};
 pub fn main_js() -> Result<(), JsValue> {
 
     HtmlActor::new("topleft", CharacterProfile {
-       health: (777, 100),
+       health: (777, 1000),
        energy: (82, 100),
        mana: (123, 300)
     }, |cp| {
-          let health = resource_bar(cp.health, (101, 1, 298, 30), "#000000");
-          let energy = resource_bar(cp.energy, (101, 32, 298, 30), "#000000");
-          let mana = resource_bar(cp.mana, (101, 63, 298, 30), "#000000");
-          format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #FF0000;'>{}{}{}</div>",
+          let health = resource_bar(cp.health, (101, 1, 294, 30), "#FF0000");
+          let energy = resource_bar(cp.energy, (101, 32, 294, 30), "#FFFF00");
+          let mana = resource_bar(cp.mana, (101, 63, 294, 30), "#0000FF");
+          format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #666666;'>{}{}{}</div>",
              health, energy, mana)
        }, vec![
           ("document", "ready", Box::new(|time, msg| { true })
