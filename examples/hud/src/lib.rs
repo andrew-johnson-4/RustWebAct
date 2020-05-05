@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value};
+use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::{HtmlActor};
 
 #[wasm_bindgen(start)]
@@ -46,6 +47,7 @@ Action Bar</div>".to_string()
        )],
     );
 
+    set_interval_forget(|| { JSMX_EXCHANGE.push("notifications","local",&Value::String("Halt, who goes there!".to_string())) }, 5000);
     JSMX_EXCHANGE.push("document","ready",&Value::Null);
     Ok(())
 }
