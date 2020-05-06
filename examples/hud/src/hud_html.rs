@@ -13,3 +13,7 @@ pub fn resource_bar(resource: (u64, u64), bbox: (u64, u64, u64, u64), color: &st
        inner_width-8, height-8, color,
        resource_current, resource_cap)
 }
+
+pub fn character_portrait() -> String {
+   format!("<div style='position: absolute; left:10px; top:10px; width:80px; height:80px; background-color:#000000; z-index:2;'></div>")
+}

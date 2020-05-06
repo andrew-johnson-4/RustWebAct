@@ -4,7 +4,7 @@ use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::{HtmlActor};
 mod hud_state; use hud_state::{CharacterProfile};
-mod hud_html; use hud_html::{resource_bar};
+mod hud_html; use hud_html::*;
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
@@ -14,11 +14,12 @@ pub fn main_js() -> Result<(), JsValue> {
        energy: (82, 100),
        mana: (123, 300)
     }, |cp| {
+          let portrait = character_portrait();
           let health = resource_bar(cp.health, (101, 1, 294, 30), "#FF0000");
           let energy = resource_bar(cp.energy, (101, 32, 294, 30), "#FFFF00");
           let mana = resource_bar(cp.mana, (101, 63, 294, 30), "#0000FF");
-          format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #666666;'>{}{}{}</div>",
-             health, energy, mana)
+          format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #666666;'>{}{}{}{}</div>",
+             portrait, health, energy, mana)
        }, vec![
           ("character","regen_health", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_health(n.as_u64().unwrap()) }; true })),
           ("character","regen_energy", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_energy(n.as_u64().unwrap()) }; true })),
