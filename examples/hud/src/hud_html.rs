@@ -20,7 +20,7 @@ pub fn character_portrait() -> String {
 }
 
 pub fn chatlog_head(name: &str, show: &str) -> String {
-   format!("<div style='float: left; height: 100%; padding: 0 10px; color:#FFFFFF; border-right: 1px solid limegreen;
+   format!("<div style='float: left; height: 100%; padding: 0 10px; color:#FFFFFF; border-right: 1px solid limegreen; cursor:pointer;
 font-size:12px; line-height:24px; font-family:sans-serif; {}' onclick='rwa.jsmx_push(\"log\",\"set_show\",\"{}\")'>{}</div>",
       if name==show {"font-weight:bold;"} else {""},
       name,
@@ -50,6 +50,6 @@ pub fn chatlog_log(log: &ChatLog) -> String {
 <div style='position:absolute; bottom:0;'>{}</div></div>", msgs)
 }
 pub fn chatlog_input() -> String {
-   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen;'>{}</div>",
+   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen; cursor:text'>{}</div>",
    "")
 }

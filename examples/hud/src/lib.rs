@@ -51,6 +51,15 @@ Map Overlay</div>".to_string()
              }
              true
           })),
+          ("log", "character", Box::new(|cl, msg| {
+             let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
+             for (n,log) in cl.channels.iter_mut() {
+                if n=="character" {
+                  log.push(msg.clone());
+                }
+             }
+             true
+          })),
           ("log", "set_show", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              if msg!=cl.show {

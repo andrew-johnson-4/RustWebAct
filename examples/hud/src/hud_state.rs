@@ -26,7 +26,7 @@ impl ChatLog {
        ChatLog { show: "local".to_string(),
        channels: vec![
           ("local".to_string(), Vec::new()),
-          ("log".to_string(), Vec::new()),
+          ("character".to_string(), Vec::new()),
        ]}
     }
 }
