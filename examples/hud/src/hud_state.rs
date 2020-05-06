@@ -16,3 +16,15 @@ impl CharacterProfile {
       self.mana.0 = min(self.mana.0+v, self.mana.1);
    }
 }
+
+pub struct ChatLog {
+   channels: Vec<(String,Vec<String>)>
+}
+impl ChatLog {
+    pub fn new() -> ChatLog {
+       ChatLog { channels: vec![
+          ("local".to_string(), Vec::new()),
+          ("log".to_string(), Vec::new()),
+       ]}
+    }
+}

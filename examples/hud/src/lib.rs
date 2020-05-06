@@ -3,7 +3,7 @@ use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::{HtmlActor};
-mod hud_state; use hud_state::{CharacterProfile};
+mod hud_state; use hud_state::*;
 mod hud_html; use hud_html::*;
 
 #[wasm_bindgen(start)]
@@ -36,7 +36,7 @@ Map Overlay</div>".to_string()
        )],
     );
 
-    HtmlActor::new("bottomleft", (), |notifications| {
+    HtmlActor::new("bottomleft", ChatLog::new(), |log| {
           "<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #0000FF;'>
 Notifications</div>".to_string()
        }, vec![
