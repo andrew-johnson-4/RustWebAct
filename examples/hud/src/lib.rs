@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 use jsmx::{JSMX_EXCHANGE};
-use serde_json::{Value};
+use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::{HtmlActor};
 mod hud_state; use hud_state::{CharacterProfile};
@@ -20,7 +20,10 @@ pub fn main_js() -> Result<(), JsValue> {
           format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #666666;'>{}{}{}</div>",
              health, energy, mana)
        }, vec![
-          ("document", "ready", Box::new(|time, msg| { true })
+          ("character","regen_health", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_health(n.as_u64().unwrap()) }; true })),
+          ("character","regen_energy", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_energy(n.as_u64().unwrap()) }; true })),
+          ("character","regen_mana", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_mana(n.as_u64().unwrap()) }; true })),
+          ("document", "ready", Box::new(|_, _| { true })
        )],
     );
 
@@ -56,7 +59,11 @@ Action Bar</div>".to_string()
        )],
     );
 
-    set_interval_forget(|| { JSMX_EXCHANGE.push("notifications","local",&Value::String("Halt, who goes there!".to_string())) }, 5000);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("character","regen_health",&json!(10)) }, 5000);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("character","regen_energy",&json!(5)) }, 1000);
+    set_interval_forget(|| { JSMX_EXCHANGE.push("character","regen_mana",&json!(5)) }, 5000);
+
+    set_interval_forget(|| { JSMX_EXCHANGE.push("notifications","local",&json!("Halt, who goes there!")) }, 5000);
     JSMX_EXCHANGE.push("document","ready",&Value::Null);
     Ok(())
 }
