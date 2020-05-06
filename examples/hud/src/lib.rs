@@ -39,9 +39,18 @@ Map Overlay</div>".to_string()
     HtmlActor::new("bottomleft", ChatLog::new(), |log| {
           format!("<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #111111; border: 1px solid limegreen;'>{}{}{}</div>",
           chatlog_channels(log),
-          chatlog_log(),
+          chatlog_log(log),
           chatlog_input())
        }, vec![
+          ("notifications", "local", Box::new(|cl, msg| {
+             let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
+             for (n,log) in cl.channels.iter_mut() {
+                if n=="local" {
+                  log.push(msg.clone());
+                }
+             }
+             true
+          })),
           ("document", "ready", Box::new(|time, msg| { true })
        )],
     );
@@ -66,7 +75,13 @@ Action Bar</div>".to_string()
     set_interval_forget(|| { JSMX_EXCHANGE.push("character","regen_energy",&json!(5)) }, 1000);
     set_interval_forget(|| { JSMX_EXCHANGE.push("character","regen_mana",&json!(5)) }, 5000);
 
-    set_interval_forget(|| { JSMX_EXCHANGE.push("notifications","local",&json!("Halt, who goes there!")) }, 5000);
+    let mut haltn = 0;
+    set_interval_forget(move || {
+       haltn += 1;
+       let s = format!("Halt, who goes there! #{}", haltn);
+       JSMX_EXCHANGE.push("notifications","local",&json!(s))
+    }, 5000);
+
     JSMX_EXCHANGE.push("document","ready",&Value::Null);
     Ok(())
 }
