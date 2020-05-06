@@ -18,11 +18,13 @@ impl CharacterProfile {
 }
 
 pub struct ChatLog {
-   channels: Vec<(String,Vec<String>)>
+   pub show: String,
+   pub channels: Vec<(String,Vec<String>)>
 }
 impl ChatLog {
     pub fn new() -> ChatLog {
-       ChatLog { channels: vec![
+       ChatLog { show: "local".to_string(),
+       channels: vec![
           ("local".to_string(), Vec::new()),
           ("log".to_string(), Vec::new()),
        ]}
