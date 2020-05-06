@@ -37,8 +37,10 @@ Map Overlay</div>".to_string()
     );
 
     HtmlActor::new("bottomleft", ChatLog::new(), |log| {
-          "<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #0000FF;'>
-Notifications</div>".to_string()
+          format!("<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #111111; border: 1px solid limegreen;'>{}{}{}</div>",
+          chatlog_channels(),
+          chatlog_log(),
+          chatlog_input())
        }, vec![
           ("document", "ready", Box::new(|time, msg| { true })
        )],

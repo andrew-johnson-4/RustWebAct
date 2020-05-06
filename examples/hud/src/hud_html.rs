@@ -17,3 +17,13 @@ pub fn resource_bar(resource: (u64, u64), bbox: (u64, u64, u64, u64), color: &st
 pub fn character_portrait() -> String {
    format!("<div style='position: absolute; left:10px; top:10px; width:80px; height:80px; background-color:#000000; z-index:2;'></div>")
 }
+
+pub fn chatlog_channels() -> String {
+   "".to_string()
+}
+pub fn chatlog_log() -> String {
+   "".to_string()
+}
+pub fn chatlog_input() -> String {
+   "".to_string()
+}
