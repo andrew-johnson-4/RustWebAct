@@ -42,7 +42,7 @@ Map Overlay</div>".to_string()
           chatlog_log(log),
           chatlog_input())
        }, vec![
-          ("notifications", "local", Box::new(|cl, msg| {
+          ("log", "local", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              for (n,log) in cl.channels.iter_mut() {
                 if n=="local" {
@@ -50,6 +50,13 @@ Map Overlay</div>".to_string()
                 }
              }
              true
+          })),
+          ("log", "set_show", Box::new(|cl, msg| {
+             let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
+             if msg!=cl.show {
+                cl.show = msg;
+                true
+             } else { false }
           })),
           ("document", "ready", Box::new(|time, msg| { true })
        )],
@@ -79,9 +86,14 @@ Action Bar</div>".to_string()
     set_interval_forget(move || {
        haltn += 1;
        let s = format!("Halt, who goes there! #{}", haltn);
-       JSMX_EXCHANGE.push("notifications","local",&json!(s))
+       JSMX_EXCHANGE.push("log","local",&json!(s))
     }, 5000);
 
     JSMX_EXCHANGE.push("document","ready",&Value::Null);
     Ok(())
+}
+
+#[wasm_bindgen]
+pub fn jsmx_push(r1: &str, r2: &str, msg: &str) {
+   JSMX_EXCHANGE.push(r1,r2,&json!(msg));
 }

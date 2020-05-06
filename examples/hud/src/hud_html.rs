@@ -20,8 +20,10 @@ pub fn character_portrait() -> String {
 }
 
 pub fn chatlog_head(name: &str, show: &str) -> String {
-   format!("<div style='float: left; height: 100%; padding: 0 10px; color:#FFFFFF; border-right: 1px solid limegreen; font-size:12px; line-height:24px; font-family:sans-serif; {}'>{}</div>",
+   format!("<div style='float: left; height: 100%; padding: 0 10px; color:#FFFFFF; border-right: 1px solid limegreen;
+font-size:12px; line-height:24px; font-family:sans-serif; {}' onclick='rwa.jsmx_push(\"log\",\"set_show\",\"{}\")'>{}</div>",
       if name==show {"font-weight:bold;"} else {""},
+      name,
       name)
 }
 pub fn chatlog_channels(log: &ChatLog) -> String {
