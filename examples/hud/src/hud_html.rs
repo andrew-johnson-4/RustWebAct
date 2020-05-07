@@ -1,4 +1,5 @@
 use crate::hud_state::*;
+use htmlescape::encode_minimal;
 
 pub fn resource_bar(resource: (u64, u64), bbox: (u64, u64, u64, u64), color: &str) -> String {
     let (left, top, width, height) = bbox;
@@ -49,7 +50,8 @@ pub fn chatlog_log(log: &ChatLog) -> String {
    format!("<div style='position:absolute; left:0; bottom:24px; width: 100%; height:198px; overflow: hidden;'>
 <div style='position:absolute; bottom:0;'>{}</div></div>", msgs)
 }
-pub fn chatlog_input() -> String {
-   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen; cursor:text'>{}</div>",
-   "")
+pub fn chatlog_input(log: &ChatLog) -> String {
+   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen; cursor:text;
+font-size:13px; font-family:sans-serif; line-height:24px; color:#FFFFFF; padding: 0 10px;'>{}</div>",
+      encode_minimal(&log.input))
 }

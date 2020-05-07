@@ -40,7 +40,7 @@ Map Overlay</div>".to_string()
           format!("<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #111111; border: 1px solid limegreen;'>{}{}{}</div>",
           chatlog_channels(log),
           chatlog_log(log),
-          chatlog_input())
+          chatlog_input(log))
        }, vec![
           ("log", "local", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
@@ -67,7 +67,12 @@ Map Overlay</div>".to_string()
                 true
              } else { false }
           })),
-          ("document", "ready", Box::new(|time, msg| { true })
+          ("document", "keydown", Box::new(|cl, msg| {
+             let keyCode = msg["keyCode"].as_str().unwrap();
+             cl.input += keyCode;
+             true
+          })),
+          ("document", "ready", Box::new(|_, _| { true })
        )],
     );
 
@@ -103,6 +108,7 @@ Action Bar</div>".to_string()
 }
 
 #[wasm_bindgen]
-pub fn jsmx_push(r1: &str, r2: &str, msg: &str) {
-   JSMX_EXCHANGE.push(r1,r2,&json!(msg));
+pub fn jsmx_push(r1: &str, r2: &str, msg: &JsValue) {
+   let msg: Value = msg.into_serde().unwrap();
+   JSMX_EXCHANGE.push(r1,r2,&msg);
 }
