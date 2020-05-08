@@ -12,6 +12,21 @@ impl HtmlDom {
    pub fn render(&self) -> String {
       format!("<{}></{}>", self.tag, self.tag)
    }
+   pub fn div() -> HtmlDom {
+      HtmlDom { tag: "div".to_string(), style: HashMap::new() }
+   }
+   pub fn span() -> HtmlDom {
+      HtmlDom { tag: "span".to_string(), style: HashMap::new() }
+   }
+   pub fn a() -> HtmlDom {
+      HtmlDom { tag: "a".to_string(), style: HashMap::new() }
+   }
+   pub fn img() -> HtmlDom {
+      HtmlDom { tag: "img".to_string(), style: HashMap::new() }
+   }
+   pub fn p() -> HtmlDom {
+      HtmlDom { tag: "p".to_string(), style: HashMap::new() }
+   }
    pub fn z<'a>(&'a mut self) -> &'a mut HtmlDom {
       self.style.insert("z-index".to_string(),"auto".to_string());
       self
