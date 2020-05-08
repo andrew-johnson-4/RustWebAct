@@ -6,26 +6,43 @@ use std::collections::HashMap;
 
 pub struct HtmlDom {
    tag: String,
-   style: HashMap<String,String>
+   style: HashMap<String,String>,
+   children: Vec<HtmlDom>,
+   inner: String,
 }
 impl HtmlDom {
    pub fn render(&self) -> String {
-      format!("<{}></{}>", self.tag, self.tag)
+      let mut cs = String::new();
+      for c in self.children.iter() {
+         cs += &c.render();
+      }
+      let mut style = String::new();
+      for (k,v) in self.style.iter() {
+         style += &format!("{}:{} ", k, v);
+      }
+      if self.tag.len()>0 {
+         format!("<{} style='{}'>{}</{}>", self.tag, style, cs, self.tag)
+      } else {
+         self.inner.clone()
+      }
+   }
+   pub fn text() -> HtmlDom {
+      HtmlDom { tag: "".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn div() -> HtmlDom {
-      HtmlDom { tag: "div".to_string(), style: HashMap::new() }
+      HtmlDom { tag: "div".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn span() -> HtmlDom {
-      HtmlDom { tag: "span".to_string(), style: HashMap::new() }
+      HtmlDom { tag: "span".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn a() -> HtmlDom {
-      HtmlDom { tag: "a".to_string(), style: HashMap::new() }
+      HtmlDom { tag: "a".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn img() -> HtmlDom {
-      HtmlDom { tag: "img".to_string(), style: HashMap::new() }
+      HtmlDom { tag: "img".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn p() -> HtmlDom {
-      HtmlDom { tag: "p".to_string(), style: HashMap::new() }
+      HtmlDom { tag: "p".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
    }
    pub fn z<'a>(&'a mut self) -> &'a mut HtmlDom {
       self.style.insert("z-index".to_string(),"auto".to_string());
