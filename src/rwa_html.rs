@@ -1,89 +1,18 @@
-use serde_json::{Value};
+use serde_json::{Value,json};
 use std::sync::{Arc,Mutex};
 use std::borrow::{Borrow,BorrowMut};
 use jsmx::{JSMX_EXCHANGE};
-use std::collections::HashMap;
+use rdxl::rdxl;
 
-pub struct HtmlDom {
-   tag: String,
-   style: HashMap<String,String>,
-   children: Vec<HtmlDom>,
-   inner: String,
+pub fn json_merge(_l: &Value, _r: &Value) -> Value {
+   Value::Null
 }
-impl HtmlDom {
-   pub fn render(&self) -> String {
-      let mut cs = String::new();
-      for c in self.children.iter() {
-         cs += &c.render();
-      }
-      let mut style = String::new();
-      for (k,v) in self.style.iter() {
-         style += &format!("{}:{} ", k, v);
-      }
-      if self.tag.len()>0 {
-         format!("<{} style='{}'>{}</{}>", self.tag, style, cs, self.tag)
-      } else {
-         self.inner.clone()
-      }
-   }
-   pub fn text() -> HtmlDom {
-      HtmlDom { tag: "".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn div() -> HtmlDom {
-      HtmlDom { tag: "div".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn span() -> HtmlDom {
-      HtmlDom { tag: "span".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn a() -> HtmlDom {
-      HtmlDom { tag: "a".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn img() -> HtmlDom {
-      HtmlDom { tag: "img".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn p() -> HtmlDom {
-      HtmlDom { tag: "p".to_string(), style: HashMap::new(), children: Vec::new(), inner: "".to_string() }
-   }
-   pub fn z<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"auto".to_string());
-      self
-   }
-   pub fn z1<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"1".to_string());
-      self
-   }
-   pub fn z2<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"2".to_string());
-      self
-   }
-   pub fn z3<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"3".to_string());
-      self
-   }
-   pub fn z4<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"4".to_string());
-      self
-   }
-   pub fn z5<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"5".to_string());
-      self
-   }
-   pub fn z6<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"6".to_string());
-      self
-   }
-   pub fn z7<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"7".to_string());
-      self
-   }
-   pub fn z8<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"8".to_string());
-      self
-   }
-   pub fn z9<'a>(&'a mut self) -> &'a mut HtmlDom {
-      self.style.insert("z-index".to_string(),"9".to_string());
-      self
-   }
+
+pub fn progress_bar(js: &Value) -> String {
+   //{ style={...}, progress:Number }
+   let _style = json_merge(&json!({}), js);
+   rdxl!(<div>
+   </div>)
 }
 
 pub struct HtmlActor<T> {
