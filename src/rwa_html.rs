@@ -15,8 +15,23 @@ pub fn json_merge(l: &Value, r: &Value) -> Value {
    Value::Object(m)
 }
 
+pub trait ToStyle {
+   fn to_style(&self) -> String;
+}
+impl ToStyle for Value {
+   fn to_style(&self) -> String {
+      let mut s = String::new();
+      for (k,v) in self.as_object().expect("ToStyle expected self as Object").iter() {
+         let k = k.as_str();
+         let v = v.as_str().expect("ToStyle expected val as String");
+         s.push_str(&format!("{}:{};", k, v));
+      }
+      s
+   }
+}
+
 pub fn progress_bar(js: &Value) -> String {
-   let _style = json_merge(&json!({
+   let style = json_merge(&json!({
       "width": "100px",
       "height": "10px",
       "background-color": "#FF0000",
@@ -25,7 +40,7 @@ pub fn progress_bar(js: &Value) -> String {
       let ar = js.as_array().expect("progress_bar expected array");
       (ar[0].as_i64().unwrap_or(0), ar[1].as_i64().unwrap_or(1))
    };
-   rdxl!(<div>
+   rdxl!(<div style=[[style]]>
      {{per}} / {{cent}}
    </div>)
 }
