@@ -1,29 +1,35 @@
+#![feature(proc_macro_hygiene)]
 use wasm_bindgen::prelude::*;
 use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
-use rustwebact::rwa_html::{HtmlActor};
+use rustwebact::rwa_html::{HtmlActor,progress_bar};
+use rdxl::rdxl;
 pub mod hud_state; use hud_state::*;
 pub mod hud_html; use hud_html::*;
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
 
-    HtmlActor::new("topleft", CharacterProfile {
-       health: (777, 1000),
-       energy: (82, 100),
-       mana: (123, 300)
-    }, |cp| {
-          let portrait = character_portrait();
-          let health = resource_bar(cp.health, (101, 1, 294, 30), "#FF0000");
-          let energy = resource_bar(cp.energy, (101, 32, 294, 30), "#FFFF00");
-          let mana = resource_bar(cp.mana, (101, 63, 294, 30), "#0000FF");
-          format!("<div style='position: absolute; top: 0; left: 0; width: 400px; height: 100px; background-color: #666666;'>{}{}{}{}</div>",
-             portrait, health, energy, mana)
+    HtmlActor::new("topleft", json!({
+       "health": [777, 1000],
+       "energy": [82, 100],
+       "mana": [123, 300],
+    }), |stats| {
+          rdxl!(<div style="position:absolute; top:0; left:0; width:400px; height:100px; background-color:#666666;">
+             {{ progress_bar(&stats["health"]) }}
+             {{ progress_bar(&stats["energy"]) }}
+             {{ progress_bar(&stats["mana"]) }}
+          </div>)
+          //let health = resource_bar(cp.health, (101, 1, 294, 30), "#FF0000");
+          //let energy = resource_bar(cp.energy, (101, 32, 294, 30), "#FFFF00");
+          //let mana = resource_bar(cp.mana, (101, 63, 294, 30), "#0000FF");
        }, vec![
+          /*
           ("character","regen_health", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_health(n.as_u64().unwrap()) }; true })),
           ("character","regen_energy", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_energy(n.as_u64().unwrap()) }; true })),
           ("character","regen_mana", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_mana(n.as_u64().unwrap()) }; true })),
+          */
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
