@@ -1,6 +1,6 @@
 [package]
 name = "rustwebact"
-version = "0.2.4"
+version = "0.2.5"
 authors = ["Andrew <andrew@subarctic.org>"]
 license = "MIT OR Apache-2.0"
 description = "Reactive Actor Web Apps for Rust on the Web"
