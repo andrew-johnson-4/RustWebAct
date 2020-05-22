@@ -2,7 +2,7 @@
 name = "rustwebact"
 version = "0.2.4"
 authors = ["Andrew <andrew@subarctic.org>"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 description = "Reactive Actor Web Apps for Rust on the Web"
 edition = "2018"
 readme = "README.md"
