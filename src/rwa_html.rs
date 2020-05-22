@@ -1,17 +1,32 @@
-use serde_json::{Value,json};
+use serde_json::{Value,Map,json};
 use std::sync::{Arc,Mutex};
 use std::borrow::{Borrow,BorrowMut};
 use jsmx::{JSMX_EXCHANGE};
 use rdxl::rdxl;
 
-pub fn json_merge(_l: &Value, _r: &Value) -> Value {
-   Value::Null
+pub fn json_merge(l: &Value, r: &Value) -> Value {
+   let mut m = Map::new();
+   for (k,v) in l.as_object().expect("json_merge expected l as Object").iter() {
+      m.insert(k.to_string(), v.clone());
+   }
+   for (k,v) in r.as_object().expect("json_merge expected r as Object").iter() {
+      m.insert(k.to_string(), v.clone());
+   }
+   Value::Object(m)
 }
 
 pub fn progress_bar(js: &Value) -> String {
-   //{ style={...}, progress:Number }
-   let _style = json_merge(&json!({}), js);
+   let _style = json_merge(&json!({
+      "width": "100px",
+      "height": "10px",
+      "background-color": "#FF0000",
+   }), js.get("style").unwrap_or(&json!({})));
+   let (per,cent) = {
+      let ar = js.as_array().expect("progress_bar expected array");
+      (ar[0].as_i64().unwrap_or(0), ar[1].as_i64().unwrap_or(1))
+   };
    rdxl!(<div>
+     {{per}} / {{cent}}
    </div>)
 }
 
