@@ -12,9 +12,9 @@ pub mod hud_html; use hud_html::*;
 pub fn main_js() -> Result<(), JsValue> {
 
     HtmlActor::new("topleft", json!({
-       "health": [777, 1000],
-       "energy": [82, 100],
-       "mana": [123, 300],
+       "health": { "progress":[777, 1000], "progress_style":{"background-color":"#FF0000"} },
+       "energy": { "progress":[82, 100], "progress_style":{"background-color":"#FFFF00"} },
+       "mana": { "progress":[123, 300], "progress_style":{"background-color":"#0000FF"} }
     }), |stats| {
           rdxl!(<div style="position:absolute; top:0; left:0; width:400px; height:100px; background-color:#666666;">
              {{ progress_bar(&stats["health"]) }}
