@@ -31,17 +31,23 @@ impl ToStyle for Value {
 }
 
 pub fn progress_bar(js: &Value) -> String {
-   let style = json_merge(&json!({
-      "width": "100px",
-      "height": "10px",
-      "background-color": "#FF0000",
-   }), js.get("style").unwrap_or(&json!({})));
    let (per,cent) = {
       let ar = js.as_array().expect("progress_bar expected array");
-      (ar[0].as_i64().unwrap_or(0), ar[1].as_i64().unwrap_or(1))
+      (ar[0].as_f64().unwrap_or(0.0), ar[1].as_f64().unwrap_or(1.0))
    };
+   let style = json_merge(&json!({ "box-sizing":"border-box", "width":"100%", "padding":"3px", "background-color":"#555555" }), js.get("style").unwrap_or(&json!({})));
+   let style_bar = json_merge(&json!({ "box-sizing":"border-box", "position":"relative", "width":"100%", "padding":"3px", "text-align":"center", "font-size":"14px",
+      "background-color":"#CCCCCC" }), js.get("bar_style").unwrap_or(&json!({})));
+   let style_progress = json_merge(&json!({ "position":"absolute", "top":"0", "left":"0", "height":"100%",
+      "width":format!("{}%", 100.0*per/cent), "background-color":"#FFFFFF" }), js.get("progress_style").unwrap_or(&json!({})));
+   let style_text = json_merge(&json!({ "position":"absolute", "top":"0", "left":"0", "padding":"3px", "width":"100%",
+      }), js.get("progress_style").unwrap_or(&json!({})));
    rdxl!(<div style=[[style]]>
-     {{per}} / {{cent}}
+     <div style=[[style_bar]]>
+       <div style=[[style_progress]]></div>
+       <div style=[[style_text]]>{{per}} / {{cent}}</div>
+       "&nbsp;"
+     </div>
    </div>)
 }
 
