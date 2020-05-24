@@ -7,7 +7,6 @@ use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::{HtmlActor,progress_bar};
 use rdxl::rdxl;
-pub mod hud_state; use hud_state::*;
 pub mod hud_html; use hud_html::*;
 
 #[wasm_bindgen(start)]
@@ -57,12 +56,17 @@ Map Overlay</div>".to_string()
        )],
     );
 
-    HtmlActor::new("bottomleft", ChatLog::new(), |log| {
+    HtmlActor::new("bottomleft", json!({ "input":"", "show":"", "channels":{"local":[], "character":[]} }), |log| {
+          rdxl!(<div>
+          </div>)
+          /*
           format!("<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #111111; border: 1px solid limegreen;'>{}{}{}</div>",
           chatlog_channels(log),
           chatlog_log(log),
           chatlog_input(log))
+          */
        }, vec![
+          /*
           ("log", "local", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              for (n,log) in cl.channels.iter_mut() {
@@ -93,6 +97,7 @@ Map Overlay</div>".to_string()
              cl.input += keyCode;
              true
           })),
+          */
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
