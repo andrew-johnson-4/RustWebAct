@@ -1,5 +1,7 @@
 #![feature(proc_macro_hygiene)]
+use std::cmp::{max,min};
 use wasm_bindgen::prelude::*;
+use web_sys::console;
 use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
@@ -21,15 +23,28 @@ pub fn main_js() -> Result<(), JsValue> {
              {{ progress_bar(&stats["energy"]) }}
              {{ progress_bar(&stats["mana"]) }}
           </div>)
-          //let health = resource_bar(cp.health, (101, 1, 294, 30), "#FF0000");
-          //let energy = resource_bar(cp.energy, (101, 32, 294, 30), "#FFFF00");
-          //let mana = resource_bar(cp.mana, (101, 63, 294, 30), "#0000FF");
        }, vec![
-          /*
-          ("character","regen_health", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_health(n.as_u64().unwrap()) }; true })),
-          ("character","regen_energy", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_energy(n.as_u64().unwrap()) }; true })),
-          ("character","regen_mana", Box::new(|cp, v| { if let Value::Number(n) = v { cp.regen_mana(n.as_u64().unwrap()) }; true })),
-          */
+          ("character","regen_health", Box::new(|cp, v| {
+             let reg = v.as_i64().expect("regen character health expected i64");
+             let cent = cp["health"]["progress"][1].as_i64().expect("regen character health expected i64");
+             let per = min(cent,reg+cp["health"]["progress"][0].as_i64().expect("regen character health expected i64"));
+             *cp.get_mut("health").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             true
+          })),
+          ("character","regen_energy", Box::new(|cp, v| {
+             let reg = v.as_i64().expect("regen character health expected i64");
+             let cent = cp["energy"]["progress"][1].as_i64().expect("regen character health expected i64");
+             let per = min(cent,reg+cp["energy"]["progress"][0].as_i64().expect("regen character health expected i64"));
+             *cp.get_mut("energy").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             true
+          })),
+          ("character","regen_mana", Box::new(|cp, v| {
+             let reg = v.as_i64().expect("regen character health expected i64");
+             let cent = cp["mana"]["progress"][1].as_i64().expect("regen character health expected i64");
+             let per = min(cent,reg+cp["mana"]["progress"][0].as_i64().expect("regen character health expected i64"));
+             *cp.get_mut("mana").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             true
+          })),
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
