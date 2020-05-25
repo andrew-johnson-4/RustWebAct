@@ -12,36 +12,28 @@ pub mod hud_html; use hud_html::*;
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
 
-    HtmlActor::new("topleft", json!({
-       "health": { "progress":[777, 1000], "progress_style":{"background-color":"#FF0000"} },
-       "energy": { "progress":[82, 100], "progress_style":{"background-color":"#FFFF00"} },
-       "mana": { "progress":[123, 300], "progress_style":{"background-color":"#0000FF"} }
-    }), |stats| {
+    struct CharacterProfile {
+       health: (u64,u64),
+       energy: (u64,u64),
+       mana: (u64,u64),
+    }
+    HtmlActor::new("topleft", CharacterProfile { health:(777,1000), energy:(82,100), mana:(123,300) }, |stats| {
           rdxl!(<div style="position:absolute; top:0; left:0; width:400px; height:100px; background-color:#666666;">
-             {{ progress_bar(&stats["health"]) }}
-             {{ progress_bar(&stats["energy"]) }}
-             {{ progress_bar(&stats["mana"]) }}
+             {{ progress_bar(&json!({ "progress":[stats.health.0, stats.health.1], "progress_style":{"background-color":"#FF0000"} })) }}
+             {{ progress_bar(&json!({ "progress":[stats.energy.0, stats.energy.1], "progress_style":{"background-color":"#FFFF00"} })) }}
+             {{ progress_bar(&json!({ "progress":[stats.mana.0, stats.mana.1], "progress_style":{"background-color":"#0000FF"} })) }}
           </div>)
        }, vec![
           ("character","regen_health", Box::new(|cp, v| {
-             let reg = v.as_i64().expect("regen character health expected i64");
-             let cent = cp["health"]["progress"][1].as_i64().expect("regen character health expected i64");
-             let per = min(cent,reg+cp["health"]["progress"][0].as_i64().expect("regen character health expected i64"));
-             *cp.get_mut("health").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             cp.health.0 = min(cp.health.1, cp.health.0 + (v.as_i64().unwrap() as u64));
              true
           })),
           ("character","regen_energy", Box::new(|cp, v| {
-             let reg = v.as_i64().expect("regen character health expected i64");
-             let cent = cp["energy"]["progress"][1].as_i64().expect("regen character health expected i64");
-             let per = min(cent,reg+cp["energy"]["progress"][0].as_i64().expect("regen character health expected i64"));
-             *cp.get_mut("energy").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             cp.energy.0 = min(cp.energy.1, cp.energy.0 + (v.as_i64().unwrap() as u64));
              true
           })),
           ("character","regen_mana", Box::new(|cp, v| {
-             let reg = v.as_i64().expect("regen character health expected i64");
-             let cent = cp["mana"]["progress"][1].as_i64().expect("regen character health expected i64");
-             let per = min(cent,reg+cp["mana"]["progress"][0].as_i64().expect("regen character health expected i64"));
-             *cp.get_mut("mana").unwrap().get_mut("progress").unwrap().get_mut(0).unwrap() = json!(per);
+             cp.mana.0 = min(cp.mana.1, cp.mana.0 + (v.as_i64().unwrap() as u64));
              true
           })),
           ("document", "ready", Box::new(|_, _| { true })
