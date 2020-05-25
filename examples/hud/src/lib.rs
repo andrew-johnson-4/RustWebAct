@@ -48,23 +48,57 @@ Map Overlay</div>".to_string()
        )],
     );
 
+/*
+pub fn chatlog_input(log: &ChatLog) -> String {
+   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen; cursor:text;
+font-size:13px; font-family:sans-serif; line-height:24px; color:#FFFFFF; padding: 0 10px;'>{}</div>",
+      encode_minimal(&log.input))
+}
+*/
     struct ChatLog {
        input: String,
        show: String,
        channels: Vec<(String,Vec<String>)>
     }
-    HtmlActor::new("bottomleft", ChatLog{ input:"".to_string(), show:"".to_string(),
+    HtmlActor::new("bottomleft", ChatLog{ input:"".to_string(), show:"local".to_string(),
        channels:vec![("local".to_string(),vec![]), ("character".to_string(),vec![])] }, |log| {
-          rdxl!(<div>
+          rdxl!(<div style="position:absolute; bottom:40px; left:0; width:600px; height:250px; background-color:#111111; border:1px solid limegreen;
+font-size:12px; line-height:24px; font-family:sans-serif;">
+            <div style="border-bottom:1px solid limegreen;">
+              <div>{{ for ch in log.channels.iter() {{
+                <div style="float:left; height:100%; padding:0 10px; color:#FFFFFF; border-right:1px solid limegreen; cursor:pointer;">
+                  {{ if ch.0==log.show {{
+                    <b>{{ ch.0 }}</b>
+                  }} else {{
+                    {{ ch.0 }}
+                  }} }}
+                </div>
+              }} }}</div>
+              <div style="clear:both;"></div>
+            </div>
+            <div style="position:absolute; left:0; bottom:24px; width: 100%; height:198px; overflow: hidden;">
+              <div style="position:absolute; bottom:0; line-height:16px;">
+                {{ for ch in log.channels.iter() {{
+                  {{ if ch.0==log.show {{
+                    {{ for l in ch.1.iter() {{
+                      <div style="color:#FFFFFF; margin: 0 10px 4px 10px; font-size:13px; font-family:sans-serif;">{{ l }}</div>
+                    }} }}
+                  }} }}
+                }} }}
+              </div>
+            </div>
           </div>)
-          /*
-          format!("<div style='position: absolute; bottom: 40px; left: 0; width: 600px; height: 250px; background-color: #111111; border: 1px solid limegreen;'>{}{}{}</div>",
-          chatlog_channels(log),
-          chatlog_log(log),
-          chatlog_input(log))
-          */
        }, vec![
           /*
+                onclick="rwa.jsmx_push(\"log\",\"set_show\",\"{}\")">{{ ch.0 }}</div>
+          */
+          ("log", "set_show", Box::new(|cl, msg| {
+             let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
+             if msg!=cl.show {
+                cl.show = msg;
+                true
+             } else { false }
+          })),
           ("log", "local", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              for (n,log) in cl.channels.iter_mut() {
@@ -83,19 +117,6 @@ Map Overlay</div>".to_string()
              }
              true
           })),
-          ("log", "set_show", Box::new(|cl, msg| {
-             let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
-             if msg!=cl.show {
-                cl.show = msg;
-                true
-             } else { false }
-          })),
-          ("document", "keydown", Box::new(|cl, msg| {
-             let keyCode = msg["keyCode"].as_str().unwrap();
-             cl.input += keyCode;
-             true
-          })),
-          */
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
