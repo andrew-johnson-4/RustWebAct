@@ -48,7 +48,13 @@ Map Overlay</div>".to_string()
        )],
     );
 
-    HtmlActor::new("bottomleft", json!({ "input":"", "show":"", "channels":{"local":[], "character":[]} }), |log| {
+    struct ChatLog {
+       input: String,
+       show: String,
+       channels: Vec<(String,Vec<String>)>
+    }
+    HtmlActor::new("bottomleft", ChatLog{ input:"".to_string(), show:"".to_string(),
+       channels:vec![("local".to_string(),vec![]), ("character".to_string(),vec![])] }, |log| {
           rdxl!(<div>
           </div>)
           /*
