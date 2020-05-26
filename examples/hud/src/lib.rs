@@ -48,13 +48,6 @@ Map Overlay</div>".to_string()
        )],
     );
 
-/*
-pub fn chatlog_input(log: &ChatLog) -> String {
-   format!("<div style='position:absolute; left:0; bottom:0; width: 100%; height:24px; border-top:1px solid limegreen; cursor:text;
-font-size:13px; font-family:sans-serif; line-height:24px; color:#FFFFFF; padding: 0 10px;'>{}</div>",
-      encode_minimal(&log.input))
-}
-*/
     struct ChatLog {
        input: String,
        show: String,
@@ -87,12 +80,12 @@ font-size:12px; line-height:24px; font-family:sans-serif;">
                 }} }}
               </div>
             </div>
-            <input type="text" style="border:1px solid limegreen;"></input>
+            <input type="text" style="position:absolute; bottom:0; width:100%; box-sizing:border-box; padding:5px; border:none; border-top:1px solid limegreen;
+background-color:#000000; color:#FFFFFF;"/>
           </div>)
        }, vec![
           /*
                 onclick="rwa.jsmx_push(\"log\",\"set_show\",\"{}\")">{{ ch.0 }}</div>
-          */
           ("log", "set_show", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              if msg!=cl.show {
@@ -118,6 +111,7 @@ font-size:12px; line-height:24px; font-family:sans-serif;">
              }
              true
           })),
+          */
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
