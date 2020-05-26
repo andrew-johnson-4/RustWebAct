@@ -87,6 +87,7 @@ font-size:12px; line-height:24px; font-family:sans-serif;">
                 }} }}
               </div>
             </div>
+            <input type="text" style="border:1px solid limegreen;"></input>
           </div>)
        }, vec![
           /*

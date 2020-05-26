@@ -18,7 +18,7 @@ lto = true
 [dependencies]
 serde_json = "1.0.0"
 jsmx = "0.3.1"
-rdxl = "0.1.18"
+rdxl = "0.2.1"
 rustwebact = {path = "../../"}
 
 [dependencies.web-sys]
