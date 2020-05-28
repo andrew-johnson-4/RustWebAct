@@ -1,8 +1,9 @@
-use serde_json::{Value,Map,json};
 use std::sync::{Arc,Mutex};
 use std::borrow::{Borrow,BorrowMut};
 use jsmx::{JSMX_EXCHANGE};
 use rdxl::rdxl;
+use serde::{Deserialize};
+use serde_json::{Value, Map, json};
 
 pub fn json_merge(l: &Value, r: &Value) -> Value {
    let mut m = Map::new();
@@ -27,6 +28,23 @@ impl ToStyle for Value {
          s.push_str(&format!("{}:{};", k, v));
       }
       s
+   }
+}
+
+#[derive(Deserialize)]
+struct JsonMessage {
+   queue: String,
+   inbox: String,
+   message: Value
+}
+
+pub trait ToOnclick {
+   fn to_onclick(&self) -> String;
+}
+impl ToOnclick for Value {
+   fn to_onclick(&self) -> String {
+      let m: JsonMessage = serde_json::value::from_value(self.clone()).unwrap();
+      format!("on_click=\"rwa.jsmx_push({},{},{})\"", json!(m.queue), json!(m.inbox), m.message)
    }
 }
 

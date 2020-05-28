@@ -59,7 +59,8 @@ Map Overlay</div>".to_string()
 font-size:12px; line-height:24px; font-family:sans-serif;">
             <div style="border-bottom:1px solid limegreen;">
               <div>{{ for ch in log.channels.iter() {{
-                <div style="float:left; height:100%; padding:0 10px; color:#FFFFFF; border-right:1px solid limegreen; cursor:pointer;">
+                <div style="float:left; height:100%; padding:0 10px; color:#FFFFFF; border-right:1px solid limegreen; cursor:pointer;"
+                  onclick=[[ json!({"queue":"log", "inbox":"set_show", "message":ch.0 }) ]]>
                   {{ if ch.0==log.show {{
                     <b>{{ ch.0 }}</b>
                   }} else {{
@@ -85,7 +86,6 @@ background-color:#000000; color:#FFFFFF;"/>
           </div>)
        }, vec![
           /*
-                onclick="rwa.jsmx_push(\"log\",\"set_show\",\"{}\")">{{ ch.0 }}</div>
           ("log", "set_show", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              if msg!=cl.show {
