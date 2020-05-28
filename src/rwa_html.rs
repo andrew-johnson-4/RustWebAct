@@ -44,7 +44,7 @@ pub trait ToOnclick {
 impl ToOnclick for Value {
    fn to_onclick(&self) -> String {
       let m: JsonMessage = serde_json::value::from_value(self.clone()).unwrap();
-      format!("on_click=\"rwa.jsmx_push({},{},{})\"", json!(m.queue), json!(m.inbox), m.message)
+      format!("'rwa.jsmx_push({},{},{})'", json!(m.queue), json!(m.inbox), m.message)
    }
 }
 

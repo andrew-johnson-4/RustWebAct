@@ -5,9 +5,8 @@ use web_sys::console;
 use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
-use rustwebact::rwa_html::{HtmlActor,progress_bar};
+use rustwebact::rwa_html::*;
 use rdxl::rdxl;
-pub mod hud_html; use hud_html::*;
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
@@ -85,7 +84,6 @@ font-size:12px; line-height:24px; font-family:sans-serif;">
 background-color:#000000; color:#FFFFFF;"/>
           </div>)
        }, vec![
-          /*
           ("log", "set_show", Box::new(|cl, msg| {
              let msg = if let Value::String(c) = msg { c.clone() } else { "".to_string() };
              if msg!=cl.show {
@@ -111,7 +109,6 @@ background-color:#000000; color:#FFFFFF;"/>
              }
              true
           })),
-          */
           ("document", "ready", Box::new(|_, _| { true })
        )],
     );
