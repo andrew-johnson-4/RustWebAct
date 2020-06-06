@@ -1,7 +1,7 @@
 use std::sync::{Arc,Mutex};
 use std::borrow::{Borrow,BorrowMut};
 use jsmx::{JSMX_EXCHANGE};
-use rdxl::rdxl;
+use rdxl::xhtml;
 use serde::{Deserialize};
 use serde_json::{Value, Map, json};
 
@@ -65,7 +65,7 @@ pub fn progress_bar(js: &Value) -> String {
       "width":format!("{}%", 100.0*per/cent), "background-color":"#FFFFFF" }), js.get("progress_style").unwrap_or(&json!({})));
    let style_text = json_merge(&json!({ "position":"absolute", "top":"0", "left":"0", "padding":"3px", "width":"100%",
       }), js.get("text_style").unwrap_or(&json!({})));
-   rdxl!(<div style=[[style]]>
+   xhtml!(<div style=[[style]]>
      <div style=[[style_bar]]>
        <div style=[[style_progress]]></div>
        <div style=[[style_text]]>{{per}} / {{cent}}</div>

@@ -6,7 +6,7 @@ use jsmx::{JSMX_EXCHANGE};
 use serde_json::{Value,Number,json};
 use rustwebact::rwa_time::{set_interval_forget};
 use rustwebact::rwa_html::*;
-use rdxl::rdxl;
+use rdxl::xhtml;
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
@@ -17,7 +17,7 @@ pub fn main_js() -> Result<(), JsValue> {
        mana: (u64,u64),
     }
     HtmlActor::new("topleft", CharacterProfile { health:(777,1000), energy:(82,100), mana:(123,300) }, |stats| {
-          rdxl!(<div style="position:absolute; top:0; left:0; width:400px; height:100px; background-color:#666666;">
+          xhtml!(<div style="position:absolute; top:0; left:0; width:400px; height:100px; background-color:#666666;">
              {{ progress_bar(&json!({ "progress":[stats.health.0, stats.health.1], "progress_style":{"background-color":"#FF0000"} })) }}
              {{ progress_bar(&json!({ "progress":[stats.energy.0, stats.energy.1], "progress_style":{"background-color":"#FFFF00"} })) }}
              {{ progress_bar(&json!({ "progress":[stats.mana.0, stats.mana.1], "progress_style":{"background-color":"#0000FF"} })) }}
@@ -54,7 +54,7 @@ Map Overlay</div>".to_string()
     }
     HtmlActor::new("bottomleft", ChatLog{ input:"".to_string(), show:"local".to_string(),
        channels:vec![("local".to_string(),vec![]), ("character".to_string(),vec![])] }, |log| {
-          rdxl!(<div style="position:absolute; bottom:40px; left:0; width:600px; height:250px; background-color:#111111; border:1px solid limegreen;
+          xhtml!(<div style="position:absolute; bottom:40px; left:0; width:600px; height:250px; background-color:#111111; border:1px solid limegreen;
 font-size:12px; line-height:24px; font-family:sans-serif;">
             <div style="border-bottom:1px solid limegreen;">
               <div>{{ for ch in log.channels.iter() {{
